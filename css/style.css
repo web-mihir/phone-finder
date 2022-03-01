@@ -8,5 +8,14 @@
 
 body {
    font-family: "Poppins", sans-serif;
-   background-color: aquamarine;
+   background-color: rgb(223, 223, 223);
+}
+
+
+.search-card img{
+   width: 30%;
+}
+
+#item-details {
+   background-color: ghostwhite;
 }
