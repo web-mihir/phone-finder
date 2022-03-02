@@ -3,60 +3,81 @@ const searchContainer = document.querySelector('.search-container');
 
 // Phone Search Trigger
 document.getElementById('search-btn').addEventListener('click', () => {
-   searchProduct();
+   searchProduct(false);
    document.getElementById('item-details').innerHTML = "";
 });
 
+// show all product api call method
+const initApiAllProduct = () => {
+   searchProduct(true);
+   document.getElementById('item-details').innerHTML = "";
+}
+
 // Api Calling function Here for all phone items
-const initApi = (searchText) => {
+const initApi = (searchText, param) => {
    const url = `https://openapi.programming-hero.com/api/phones?search=${searchText}`;
    fetch(url).then(res => res.json()).then(responseData => {
-      displaySearchProduct(responseData.data);
+      displaySearchProduct(responseData.data, param);
    })
 }
 
 // Phone searching function
-const searchProduct = () => {
+const searchProduct = (param) => {
    const searchField = document.getElementById('search-field');
    const searchInputValue = searchField.value;
 
    if (searchInputValue == "") {
       document.querySelector('.search-err').innerText = "Write Somthing...";
    } else {
-      initApi(searchInputValue);
+      initApi(searchInputValue, param);
+      document.querySelector('.search-err').innerText = "";
    }
 }
 
 // Displaying search phone results function
-const displaySearchProduct = (product) => {
+const displaySearchProduct = (product, param) => {
 
    if (product.length > 0) {
       document.querySelector('.search-err').innerText = "";
 
-      const maxProduct = product.slice(0, 20);
+      if (product.length > 19) {
+         toggleShowAllBtn(true);
+      } else {
+         toggleShowAllBtn(false);
+      }
 
-      const mapItems = maxProduct.map(item => {
-         const { image, phone_name, brand, slug } = item;
-         return `
-               <div class="col-lg-4 col-sm-12">
-                  <div class="card m-3 search-card d-flex align-items-center justify-content-center p-2 shadow-lg">
-                  <img src="${image}" class="card-img-top pt-3" alt="...">
-                     <div class="card-body text-center">
-                        <h5 class="card-title">${phone_name}</h5>
-                        <h6 class="fs-6"><span>Brand : </span>${brand}</h6>
-                        <button onclick="productDetailsApiInit('${slug}')" class="btn btn-primary btn-sm">Details</button>
-                     </div>
-                  </div>   
-               </div>
-            `;
-      });
-
-      displayResults.innerHTML = mapItems.join("");
+      if (param === true) {
+         productMarkup(product);
+         toggleShowAllBtn(false);
+      } else {
+         const maxProduct = product.slice(0, 20);
+         productMarkup(maxProduct);
+      }
 
    } else {
       displayResults.innerHTML = "";
-      document.querySelector('.search-err').innerText = "No results found.";
+      document.querySelector('.search-err').innerText = "No products found.";
    }
+}
+
+// all product html markup
+const productMarkup = (pro) => {
+   const mapItems = pro.map(item => {
+      const { image, phone_name, brand, slug } = item;
+      return `
+            <div class="col-lg-4 col-sm-12">
+               <div class="card m-3 search-card d-flex align-items-center justify-content-center p-2 shadow-lg">
+               <img src="${image}" class="card-img-top pt-3" alt="...">
+                  <div class="card-body text-center">
+                     <h5 class="card-title">${phone_name}</h5>
+                     <h6 class="fs-6"><span>Brand : </span>${brand}</h6>
+                     <button onclick="productDetailsApiInit('${slug}')" class="btn btn-primary btn-sm">Details</button>
+                  </div>
+               </div>   
+            </div>
+         `;
+   });
+   displayResults.innerHTML = mapItems.join("");
 }
 
 // Displaying Product details action trigger
@@ -67,7 +88,7 @@ const productDetailsApiInit = (id) => {
    })
 }
 
-// Displaying Phone details
+// Displaying Product details
 const displayProductDetails = (data) => {
 
    document.getElementById('item-details').innerHTML = `
@@ -158,3 +179,11 @@ const displayProductDetails = (data) => {
   `;
 }
 
+// Toggle show all btn
+const toggleShowAllBtn = (toggle) => {
+   if (toggle === true) {
+      document.querySelector('.show-all-items').style.display = "block";
+   } else {
+      document.querySelector('.show-all-items').style.display = "none";
+   }
+}
