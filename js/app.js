@@ -10,6 +10,8 @@ const toggleShowAllBtn = (toggle) => {
    }
 }
 
+
+// toggle spinner
 const loadSpinner = (loadSpin) => {
    if (loadSpin === true) {
       document.getElementById('load_spinner').style.display = "block";
@@ -117,12 +119,12 @@ const displayProductDetails = (data) => {
    loadSpinner(false);
    document.getElementById('item-details').innerHTML = `
             <div class="col-lg-4 col-sm-12 py-3">
+            <div class="text-start"><button id="close-details" class="btn btn-sm btn-danger" onclick="closeProductDetails()">x</button></div>
                <div class="item-details-img w-75 h-100 d-flex align-items-center justify-content-center mx-auto">
                   <img src="${data.image}" alt="product-image" class="w-100">
                </div>
             </div>
             <div class="col-lg-8 col-sm-12 py-3">
-              <div class="text-end"><button id="close-details" class="btn btn-sm btn-danger" onclick="closeProductDetails()">x</button></div>
                <ul class="list-group p-4">
                <h3 class="fw-bold fs-4">Full Specification :</h3>
                   <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -203,6 +205,7 @@ const displayProductDetails = (data) => {
   `;
 }
 
+// close product detail pop up
 const closeProductDetails = () => {
    document.getElementById('item-details').innerHTML = "";
 }
