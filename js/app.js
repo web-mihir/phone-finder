@@ -49,6 +49,7 @@ const searchProduct = (param) => {
    if (searchInputValue == "") {
       document.querySelector('.search-err').innerText = "Write Somthing...";
       loadSpinner(false);
+      displayResults.innerHTML = "";
    } else {
       initApi(searchInputValue, param);
       document.querySelector('.search-err').innerText = "";
