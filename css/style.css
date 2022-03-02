@@ -19,3 +19,7 @@ body {
 #item-details {
    background-color: ghostwhite;
 }
+
+.show-all-items {
+   display: none;
+}

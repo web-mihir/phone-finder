@@ -1,65 +1,74 @@
-const searchBtn = document.getElementById('search-btn');
 const displayResults = document.querySelector('.search-results');
 const searchContainer = document.querySelector('.search-container');
 
+// Phone Search Trigger
+document.getElementById('search-btn').addEventListener('click', () => {
+   searchProduct();
+   document.getElementById('item-details').innerHTML = "";
+});
+
 // Api Calling function Here for all phone items
-const apiCall = (searchText) => {
+const initApi = (searchText) => {
    const url = `https://openapi.programming-hero.com/api/phones?search=${searchText}`;
-   fetch(url).then(res => res.json()).then(data => {
-      return displaySearchResults(data.data);
+   fetch(url).then(res => res.json()).then(responseData => {
+      displaySearchProduct(responseData.data);
    })
 }
 
 // Phone searching function
-const searchPhone = () => {
+const searchProduct = () => {
    const searchField = document.getElementById('search-field');
    const searchInputValue = searchField.value;
 
    if (searchInputValue == "") {
       document.querySelector('.search-err').innerText = "Write Somthing...";
    } else {
-      apiCall(searchInputValue);
+      initApi(searchInputValue);
    }
 }
 
 // Displaying search phone results function
-const displaySearchResults = (items) => {
+const displaySearchProduct = (product) => {
 
-   if (items.length > 0) {
+   if (product.length > 0) {
       document.querySelector('.search-err').innerText = "";
 
-      const mapItems = items.map(item => {
+      const maxProduct = product.slice(0, 20);
+
+      const mapItems = maxProduct.map(item => {
+         const { image, phone_name, brand, slug } = item;
          return `
                <div class="col-lg-4 col-sm-12">
                   <div class="card m-3 search-card d-flex align-items-center justify-content-center p-2 shadow-lg">
-                  <img src="${item.image}" class="card-img-top" alt="...">
+                  <img src="${image}" class="card-img-top pt-3" alt="...">
                      <div class="card-body text-center">
-                        <h5 class="card-title">${item.phone_name}</h5>
-                        <h6 class="fs-6"><span>Brand : </span>${item.brand}</h6>
-                        <button onclick="displayDetailsAction('${item.slug}')" class="btn btn-primary btn-sm">Details</button>
+                        <h5 class="card-title">${phone_name}</h5>
+                        <h6 class="fs-6"><span>Brand : </span>${brand}</h6>
+                        <button onclick="productDetailsApiInit('${slug}')" class="btn btn-primary btn-sm">Details</button>
                      </div>
                   </div>   
                </div>
-               `;
+            `;
       });
 
       displayResults.innerHTML = mapItems.join("");
+
    } else {
       displayResults.innerHTML = "";
       document.querySelector('.search-err').innerText = "No results found.";
    }
 }
 
-// Displaying Phone details action trigger
-const displayDetailsAction = (id) => {
+// Displaying Product details action trigger
+const productDetailsApiInit = (id) => {
    const detailsUrl = `https://openapi.programming-hero.com/api/phone/${id}`;
    fetch(detailsUrl).then(response => response.json()).then(responseData => {
-      return displayPhoneDetails(responseData.data);
+      return displayProductDetails(responseData.data);
    })
 }
 
 // Displaying Phone details
-const displayPhoneDetails = (data) => {
+const displayProductDetails = (data) => {
 
    document.getElementById('item-details').innerHTML = `
             <div class="col-lg-4 col-sm-12 py-3">
@@ -149,8 +158,3 @@ const displayPhoneDetails = (data) => {
   `;
 }
 
-// Phone Search Trigger
-searchBtn.addEventListener('click', () => {
-   searchPhone();
-   document.getElementById('item-details').innerHTML = "";
-});
