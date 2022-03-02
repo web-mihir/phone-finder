@@ -49,6 +49,7 @@ const searchProduct = (param) => {
    if (searchInputValue == "") {
       document.querySelector('.search-err').innerText = "Write Somthing...";
       loadSpinner(false);
+      toggleShowAllBtn(false);
       displayResults.innerHTML = "";
    } else {
       initApi(searchInputValue, param);
@@ -83,6 +84,7 @@ const displaySearchProduct = (product, param) => {
    } else {
       displayResults.innerHTML = "";
       document.querySelector('.search-err').innerText = "No products found.";
+      toggleShowAllBtn(false);
    }
 }
 
