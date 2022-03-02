@@ -1,10 +1,28 @@
 const displayResults = document.querySelector('.search-results');
 const searchContainer = document.querySelector('.search-container');
 
+// Toggle show all btn
+const toggleShowAllBtn = (toggle) => {
+   if (toggle === true) {
+      document.querySelector('.show-all-items').style.display = "block";
+   } else {
+      document.querySelector('.show-all-items').style.display = "none";
+   }
+}
+
+const loadSpinner = (loadSpin) => {
+   if (loadSpin === true) {
+      document.getElementById('load_spinner').style.display = "block";
+   } else {
+      document.getElementById('load_spinner').style.display = "none";
+   }
+}
+
 // Phone Search Trigger
 document.getElementById('search-btn').addEventListener('click', () => {
    searchProduct(false);
    document.getElementById('item-details').innerHTML = "";
+   loadSpinner(true);
 });
 
 // show all product api call method
@@ -28,6 +46,7 @@ const searchProduct = (param) => {
 
    if (searchInputValue == "") {
       document.querySelector('.search-err').innerText = "Write Somthing...";
+      loadSpinner(false);
    } else {
       initApi(searchInputValue, param);
       document.querySelector('.search-err').innerText = "";
@@ -49,10 +68,14 @@ const displaySearchProduct = (product, param) => {
       if (param === true) {
          productMarkup(product);
          toggleShowAllBtn(false);
+
       } else {
          const maxProduct = product.slice(0, 20);
          productMarkup(maxProduct);
+
       }
+
+      loadSpinner(false);
 
    } else {
       displayResults.innerHTML = "";
@@ -82,15 +105,16 @@ const productMarkup = (pro) => {
 
 // Displaying Product details action trigger
 const productDetailsApiInit = (id) => {
+   loadSpinner(true);
    const detailsUrl = `https://openapi.programming-hero.com/api/phone/${id}`;
    fetch(detailsUrl).then(response => response.json()).then(responseData => {
-      return displayProductDetails(responseData.data);
+      displayProductDetails(responseData.data);
    })
 }
 
 // Displaying Product details
 const displayProductDetails = (data) => {
-
+   loadSpinner(false);
    document.getElementById('item-details').innerHTML = `
             <div class="col-lg-4 col-sm-12 py-3">
                <div class="item-details-img w-75 h-100 d-flex align-items-center justify-content-center mx-auto">
@@ -98,7 +122,7 @@ const displayProductDetails = (data) => {
                </div>
             </div>
             <div class="col-lg-8 col-sm-12 py-3">
-            
+              <div class="text-end"><button id="close-details" class="btn btn-sm btn-danger" onclick="closeProductDetails()">x</button></div>
                <ul class="list-group p-4">
                <h3 class="fw-bold fs-4">Full Specification :</h3>
                   <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -179,11 +203,6 @@ const displayProductDetails = (data) => {
   `;
 }
 
-// Toggle show all btn
-const toggleShowAllBtn = (toggle) => {
-   if (toggle === true) {
-      document.querySelector('.show-all-items').style.display = "block";
-   } else {
-      document.querySelector('.show-all-items').style.display = "none";
-   }
+const closeProductDetails = () => {
+   document.getElementById('item-details').innerHTML = "";
 }

@@ -23,3 +23,12 @@ body {
 .show-all-items {
    display: none;
 }
+
+.show-all-items:hover {
+   text-decoration: underline;
+}
+
+#load_spinner {
+   display: none;
+   margin: auto;
+}

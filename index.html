@@ -45,20 +45,24 @@
                      <div class="text-center mt-3">
                         <button class="btn btn-primary" id="search-btn">Search</button>
                      </div>
-                   
+
                   </div>
                </div>
 
                <!-- Search Results -->
                <div class="col-12 mt-5">
+                  <div class="spinner-grow" id="load_spinner" role="status">
+                     <span class="visually-hidden">Loading...</span>
+                  </div>
                   <div id="item-details" class="row">
-                     
+
                   </div>
                   <div class="search-container">
                      <div class="search-results row">
 
                      </div>
-                     <button class="show-all-items" onclick="initApiAllProduct()">Show All</button>
+                     <button class="show-all-items btn btn-sm mt-3 mb-5 btn-info" onclick="initApiAllProduct()">Show
+                        All</button>
                   </div>
                </div>
             </div>
